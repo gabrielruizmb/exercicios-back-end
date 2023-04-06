@@ -316,3 +316,11 @@ insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
 update tb_movimentacoes set tempo = saida - entrada;
 
 select * from tb_movimentacoes;
+
+select movimentacoes.id, veiculos.placa, condutores.nome, movimentacoes.entrada
+from tb_movimentacoes as movimentacoes
+	inner join tb_veiculos as veiculos
+on movimentacoes.veiculo_id = veiculos.id
+	inner join tb_condutores as condutores
+on movimentacoes.condutor_id = condutores.id
+order by movimentacoes.condutor_id asc
