@@ -315,7 +315,7 @@ insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
 
 update tb_movimentacoes set tempo = saida - entrada;
 
-select * from tb_movimentacoes;
+/* -- TESTES DE COMANDOS SQL --
 
 select movimentacoes.id, veiculos.placa, condutores.nome, movimentacoes.entrada
 from tb_movimentacoes as movimentacoes
@@ -324,3 +324,26 @@ on movimentacoes.veiculo_id = veiculos.id
 	inner join tb_condutores as condutores
 on movimentacoes.condutor_id = condutores.id
 order by movimentacoes.condutor_id asc
+
+select min(id)
+from tb_movimentacoes;
+
+select count(id), veiculo_id
+from tb_movimentacoes
+group by veiculo_id
+order by count(id) desc;
+*/
+
+select max(tempo) as maior_tempo
+from tb_movimentacoes;
+
+select tb_veiculos.placa, count(veiculo_id) as quantidade_de_registros
+	from tb_movimentacoes
+left join tb_veiculos 
+	on tb_movimentacoes.veiculo_id = tb_veiculos.id
+group by placa
+order by count(veiculo_id) 
+	desc 
+		limit 1;
+		
+select * from tb_movimentacoes;
