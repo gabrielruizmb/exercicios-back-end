@@ -312,7 +312,28 @@ insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
 	
 insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
 	values (33, 3, 2, '2023-01-25 10:00:00', '2023-01-25 11:00:00');
+	
+insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
+	values (34, 3, 2, '2023-01-26 09:09:31', '2023-01-25 12:00:05');
 
+insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
+	values (35, 3, 2, '2023-01-26 13:09:31', '2023-01-25 15:00:05');
+	
+insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
+	values (36, 28, 2, '2023-02-26 09:09:31', '2023-02-25 12:00:05');
+
+insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
+	values (37, 28, 2, '2023-02-26 13:09:31', '2023-02-25 15:00:05');
+	
+insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
+	values (38, 30, 2, '2023-01-25 21:00:00', '2023-01-25 21:55:00');
+	
+insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
+	values (39, 30, 2, '2023-01-25 08:00:00', '2023-01-25 10:00:00');
+	
+insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
+	values (40, 30, 2, '2023-01-25 11:00:00', '2023-01-25 13:00:00');
+	
 update tb_movimentacoes set tempo = saida - entrada;
 
 /* -- TESTES DE COMANDOS SQL --
@@ -334,16 +355,41 @@ group by veiculo_id
 order by count(id) desc;
 */
 
+	-- Exercicios inner join --
+
+-- seleciona a placa com a maior quantidade de registros.
+select veiculos.placa as placa, count(veiculo_id) as quantidade_de_registros
+	from tb_movimentacoes as movimentacoes
+left join tb_veiculos as veiculos
+	on movimentacoes.veiculo_id = veiculos.id
+group by placa
+order by count(veiculo_id) desc limit 1;
+
+-- seleciona a placa com a maior quantidade de registros em janeiro.
+select 
+veiculos.placa as placa, 
+count(veiculo_id) as quantidade_de_registros
+	from tb_movimentacoes as movimentacoes
+left join tb_veiculos as veiculos
+	on movimentacoes.veiculo_id = veiculos.id
+	where extract(month from entrada) = 1
+group by placa
+order by count(veiculo_id) desc limit 1;
+		
+-- seleciona o veiculo com maior tempo estacionado.
 select max(tempo) as maior_tempo
 from tb_movimentacoes;
 
-select tb_veiculos.placa, count(veiculo_id) as quantidade_de_registros
-	from tb_movimentacoes
-left join tb_veiculos 
-	on tb_movimentacoes.veiculo_id = tb_veiculos.id
+	-- rascunhos
+
+select 
+veiculos.placa as placa, 
+count(veiculo_id) as quantidade_de_registros
+	from tb_movimentacoes as movimentacoes
+left join tb_veiculos as veiculos
+	on movimentacoes.veiculo_id = veiculos.id
+	where extract(month from entrada) = 1
 group by placa
-order by count(veiculo_id) 
-	desc 
-		limit 1;
-		
+order by count(veiculo_id) desc limit 1;
+
 select * from tb_movimentacoes;
