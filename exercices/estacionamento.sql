@@ -1,3 +1,10 @@
+/* SUMÁRIO:
+
+	* Comandos insert, alter table, update, delete: Linhas: 8 ~ 351.
+	* Comandos join: Linhas 354 ~ 385.
+	* Comandos view: Linhas 388 ~ 425.
+*/
+
 create table tb_condutores (
 
 	id 					serial primary key,
@@ -124,6 +131,13 @@ insert into tb_veiculos (id, placa, modelo_id, cor, tipo, ano)
 	
 insert into tb_veiculos (id, placa, modelo_id, cor, tipo, ano)
 	values (30, 'YLA1A11', 2,'azul', 'carro', 1967);
+	
+insert into tb_veiculos (id, placa, modelo_id, cor, tipo, ano)
+	values (31, 'YLA1A12', 2,'azul', 'carro', 1967);
+	
+delete from tb_veiculos where id = 31;
+
+select * from tb_veiculos;
 
 create table tb_modelos (
 
@@ -336,28 +350,10 @@ insert into tb_movimentacoes (id, veiculo_id, condutor_id, entrada, saida)
 	
 update tb_movimentacoes set tempo = saida - entrada;
 
-/* -- TESTES DE COMANDOS SQL --
-
-select movimentacoes.id, veiculos.placa, condutores.nome, movimentacoes.entrada
-from tb_movimentacoes as movimentacoes
-	inner join tb_veiculos as veiculos
-on movimentacoes.veiculo_id = veiculos.id
-	inner join tb_condutores as condutores
-on movimentacoes.condutor_id = condutores.id
-order by movimentacoes.condutor_id asc
-
-select min(id)
-from tb_movimentacoes;
-
-select count(id), veiculo_id
-from tb_movimentacoes
-group by veiculo_id
-order by count(id) desc;
-*/
 
 	-- Exercicios inner join --
 
--- seleciona a placa com a maior quantidade de registros.
+-- 1)seleciona a placa com a maior quantidade de registros.
 select veiculos.placa as placa, count(veiculo_id) as quantidade_de_registros
 	from tb_movimentacoes as movimentacoes
 left join tb_veiculos as veiculos
@@ -365,7 +361,7 @@ left join tb_veiculos as veiculos
 group by placa
 order by count(veiculo_id) desc limit 1;
 
--- seleciona a placa com a maior quantidade de registros em janeiro.
+-- 2)seleciona a placa com a maior quantidade de registros em janeiro.
 select 
 veiculos.placa as placa, 
 count(veiculo_id) as quantidade_de_registros
@@ -376,12 +372,33 @@ left join tb_veiculos as veiculos
 group by placa
 order by count(veiculo_id) desc limit 1;
 		
--- seleciona o veiculo com maior tempo estacionado.
+-- 3)seleciona o veiculo com maior tempo estacionado.
 select max(tempo) as maior_tempo
 from tb_movimentacoes;
 
-	-- rascunhos
+-- 4)seleciona o nome do condutor do veiculo com maior tempo estacionado.
+select condutores.nome as "Condutor", max(tempo) as "Tempo estacionado"
+	from tb_movimentacoes as movimentacoes
+inner join tb_condutores as condutores
+	on movimentacoes.condutor_id = condutores.id
+group by condutores.nome
+order by max(tempo) desc limit 1;
 
+
+	-- Exercicios de view --
+
+-- 1)cria uma view que seleciona a placa com a maior quantidade de registros.
+create view veiculo_mais_registrado as
+select veiculos.placa as placa, count(veiculo_id) as quantidade_de_registros
+	from tb_movimentacoes as movimentacoes
+left join tb_veiculos as veiculos
+	on movimentacoes.veiculo_id = veiculos.id
+group by placa
+order by count(veiculo_id) desc limit 1;
+
+-- 2)cria uma view que seleciona a placa com a maior quantidade
+-- de registros em janeiro.
+create view veiculo_mais_registrado_em_janeiro as
 select 
 veiculos.placa as placa, 
 count(veiculo_id) as quantidade_de_registros
@@ -391,5 +408,18 @@ left join tb_veiculos as veiculos
 	where extract(month from entrada) = 1
 group by placa
 order by count(veiculo_id) desc limit 1;
+		
+-- 3)cria uma view que seleciona o veiculo com maior tempo estacionado.
+create view veiculo_com_maior_tempo_estacionado as
+select max(tempo) as maior_tempo
+from tb_movimentacoes;
 
-select * from tb_movimentacoes;
+-- 4)cria uma view que seleciona o nome do condutor do veiculo com
+-- maior tempo estacionado.
+create view condutor_do_veiculo_com_maior_tempo_estacionado as
+select condutores.nome as "Condutor", max(tempo) as "Tempo estacionado"
+	from tb_movimentacoes as movimentacoes
+inner join tb_condutores as condutores
+	on movimentacoes.condutor_id = condutores.id
+group by condutores.nome
+order by max(tempo) desc limit 1;
