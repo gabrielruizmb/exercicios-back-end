@@ -423,3 +423,37 @@ inner join tb_condutores as condutores
 	on movimentacoes.condutor_id = condutores.id
 group by condutores.nome
 order by max(tempo) desc limit 1;
+
+	-- Exercicio de trigger e function --
+	
+create trigger checar_cpf
+	before insert or update on tb_condutores
+	for each row
+	execute function validar_cpf();
+	
+create function validar_cpf() 
+returns trigger as
+$$
+begin
+	if new.cpf not like '%.%.%-%'
+	then raise exception 'Erro';
+	end if;
+	return new;
+end;
+$$
+language plpgsql;
+
+insert into tb_condutores (id, nome, cpf, telefone, tempo_pago, tempo_desconto) 
+	values (10, 'Andreia', '5', '55(45)99999-9979', '10:00', '5:00');
+
+create function validar_cpf() 
+returns trigger as
+$$
+begin
+	if length(new.cpf) 
+	then raise exception 'Mensagem de erro';
+	end if;
+	return new;
+end;
+$$
+language plpgsql;
