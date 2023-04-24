@@ -15,13 +15,8 @@ public class Main {
         personagem003.categoria = "Maga";
         personagem003.idade = 23;
 
-        System.out.printf("Boa noite %s, você é um(a) %s e tem %d anos de idade\n",
-                personagem001.nome, personagem001.categoria, personagem001.idade);
-
-        System.out.printf("Boa noite %s, você é um(a) %s e tem %d anos de idade\n",
-                personagem002.nome, personagem002.categoria, personagem002.idade);
-
-        System.out.printf("Boa noite %s, você é um(a) %s e tem %d anos de idade\n",
-                personagem003.nome, personagem003.categoria, personagem003.idade);
+        personagem001.mostrarStatus(20);
+        personagem002.mostrarStatus(34);
+        personagem003.mostrarStatus(53);
     }
 }
